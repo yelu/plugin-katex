@@ -15,27 +15,31 @@ module.exports = {
         ]
     },
     blocks: {
-        math: {
+        math_inline: {
             shortcuts: {
                 parsers: ["markdown", "asciidoc", "restructuredtext"],
-                start: "$",
-                end: "$"
+                start: "\(",
+                end: "\)"
             },
             process: function(blk) {
                 var tex = blk.body;
-                var isInline = !(tex[0] == "$");
-                var output = "";
-                if(isInline){
-                    output = katex.renderToString(tex, {
-                    displayMode: !isInline
+                var output = katex.renderToString(tex, {
+                    displayMode: false
                     });
-                }
-                else{
-                    output = katex.renderToString(tex.substr(1, tex.length - 2), {
-                    displayMode: !isInline
+                return output;
+            }
+        },
+        math_display: {
+            shortcuts: {
+                parsers: ["markdown", "asciidoc", "restructuredtext"],
+                start: "\[",
+                end: "\]"
+            },
+            process: function(blk) {
+                var tex = blk.body;
+                var output = katex.renderToString(tex, {
+                    displayMode: true
                     });
-                }
-
                 return output;
             }
         }
